@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:path_finder/config/size_config.dart';
 import 'package:path_finder/logic/algorithms.dart';
 import 'package:path_finder/logic/generation_algorithm.dart';
 import 'package:path_finder/provider/count_model.dart';
 import 'package:path_finder/widgets/2d_grid.dart';
 import 'package:path_finder/widgets/popUpButton/fab_popup.dart';
-import 'package:path_finder/widgets/popUpButton/popUpItem.dart';
-import 'package:path_finder/widgets/popUpButton/popup_button.dart';
+import 'package:path_finder/widgets/popUpButton/fab_popup2.dart';
 import 'package:path_finder/widgets/popUpButton/popup_model.dart';
+import 'package:path_finder/widgets/popUpButton/setting_fab_popup.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class VisualizerPage extends StatefulWidget {
   @override
@@ -79,7 +79,7 @@ class _VisualizerPageState extends State<VisualizerPage> {
 
   bool drawTool = true;
 
-  Grid grid = Grid(51, 81, 50, 10, 10, 40, 50);
+  Grid grid = Grid(51, 100, 50, 10, 10, 30, 80);
 
   double brushSize = 0.1;
 
@@ -94,152 +94,125 @@ class _VisualizerPageState extends State<VisualizerPage> {
     var operationModel =
         Provider.of<OperationCountModel>(context, listen: false);
     final snackBar = SnackBar(
-      content: Text("Couldn't find path."),
+      content: Text("Path Doesn't exist"),
       duration: Duration(milliseconds: 1400),
     );
     return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.settings, color: Colors.white),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsPage()),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Container(
+              margin: EdgeInsets.symmetric(
+                vertical: SizeConfig.heightMultiplier * 2,
+              ),
+              child: SettingFabWithPopUp(
+                child: Container(
+                  child: Icon(Icons.settings, color: Colors.white),
+                  color: Colors.purple[300],
+                ),
+                disabled: false,
+              )),
+          Consumer<PopUpModel>(
+            builder: (_, model, __) {
+              return FabWithPopUp(
+                disabled: _disabled6,
+                color: _color6,
+                width: 150,
+                popUpOffset: Offset(100, 50),
+                direction: AnimatedButtonPopUpDirection.vertical,
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                      text: "Visualize\n",
+                      style: TextStyle(
+                          color: Color(0xFF2E2E2E), fontSize: 22, height: 1.0),
+                      children: [
+                        TextSpan(
+                            style: TextStyle(
+                                color: Color(0xFF2E2E2E), fontSize: 16),
+                            text: (() {
+                              switch (model.selectedPathAlg) {
+                                case VisualizingAlgorithm.astar:
+                                  return "A*";
+                                  break;
+                                case VisualizingAlgorithm.dijkstra:
+                                  return "Dijkstra";
+                                  break;
+                                case VisualizingAlgorithm.bi_dir_dijkstra:
+                                  return "Bidir.  Dijkstra";
+                                  break;
+                                default:
+                                  return "Maze";
+                              }
+                            }()))
+                      ]),
+                ),
+                onPressed: () {
+                  model.stop = false;
+                  setActiveButton(3, context);
+                  setState(() {
+                    isRunning = true;
+                    _color6 = Colors.redAccent;
+                  });
+                  disableBottomButtons();
+                  grid.clearPaths();
+                  PathfindAlgorithms.visualize(
+                      algorithm: model.selectedPathAlg,
+                      gridd: grid.nodeTypes,
+                      startti: grid.starti,
+                      starttj: grid.startj,
+                      finishi: grid.finishi,
+                      finishj: grid.finishj,
+                      onShowClosedNode: (int i, int j) {
+                        grid.addNode(i, j, Brush.closed);
+                      },
+                      onShowOpenNode: (int i, int j) {
+                        grid.addNode(i, j, Brush.open);
+                      },
+                      speed: () {
+                        return model.speed;
+                      },
+                      onDrawPath: (Node lastNode, int c) {
+                        operationModel.operations = c;
+                        if (model.stop) {
+                          setState(() {
+                            _color6 = Colors.lightGreen[500];
+                          });
+                          enableBottomButtons();
+                          return true;
+                        }
+                        grid.drawPath2(lastNode);
+                        return false;
+                      },
+                      onDrawSecondPath: (Node lastNode, int c) {
+                        operationModel.operations = c;
+                        if (model.stop) {
+                          setState(() {
+                            _color6 = Colors.lightGreen[500];
+                          });
+                          enableBottomButtons();
+                          return true;
+                        }
+                        grid.drawSecondPath2(lastNode);
+                        return false;
+                      },
+                      onFinished: (pathFound) {
+                        setState(() {
+                          isRunning = false;
+                          _color6 = Colors.lightGreen[500];
+                        });
+                        enableBottomButtons();
+                        if (!pathFound) {
+                          Scaffold.of(context).showSnackBar(snackBar);
+                        }
+                      });
+                },
+                model: model,
               );
             },
-          )
+          ),
         ],
-        title: Text("Pathfinding Visualizer"),
-      ),
-      floatingActionButton: Consumer<PopUpModel>(
-        builder: (_, model, __) {
-          return FabWithPopUp(
-            disabled: _disabled6,
-            color: _color6,
-            width: 150,
-            direction: AnimatedButtonPopUpDirection.vertical,
-            child: RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                  text: "Visualize\n",
-                  style: TextStyle(
-                      color: Color(0xFF2E2E2E), fontSize: 22, height: 1.0),
-                  children: [
-                    TextSpan(
-                        style:
-                            TextStyle(color: Color(0xFF2E2E2E), fontSize: 16),
-                        text: (() {
-                          switch (model.selectedPathAlg) {
-                            case VisualizingAlgorithm.astar:
-                              return "A*";
-                              break;
-                            case VisualizingAlgorithm.dijkstra:
-                              return "Dijkstra";
-                              break;
-                            case VisualizingAlgorithm.bi_dir_dijkstra:
-                              return "Bidir.  Dijkstra";
-                              break;
-                            default:
-                              return "Maze";
-                          }
-                        }()))
-                  ]),
-            ),
-            onPressed: () {
-              model.stop = false;
-              setActiveButton(3, context);
-              setState(() {
-                isRunning = true;
-                _color6 = Colors.redAccent;
-              });
-              disableBottomButtons();
-              grid.clearPaths();
-              PathfindAlgorithms.visualize(
-                  algorithm: model.selectedPathAlg,
-                  gridd: grid.nodeTypes,
-                  startti: grid.starti,
-                  starttj: grid.startj,
-                  finishi: grid.finishi,
-                  finishj: grid.finishj,
-                  onShowClosedNode: (int i, int j) {
-                    grid.addNode(i, j, Brush.closed);
-                  },
-                  onShowOpenNode: (int i, int j) {
-                    grid.addNode(i, j, Brush.open);
-                  },
-                  speed: () {
-                    return model.speed;
-                  },
-                  onDrawPath: (Node lastNode, int c) {
-                    operationModel.operations = c;
-                    if (model.stop) {
-                      setState(() {
-                        _color6 = Colors.lightGreen[500];
-                      });
-                      enableBottomButtons();
-                      return true;
-                    }
-                    grid.drawPath2(lastNode);
-                    return false;
-                  },
-                  onDrawSecondPath: (Node lastNode, int c) {
-                    operationModel.operations = c;
-                    if (model.stop) {
-                      setState(() {
-                        _color6 = Colors.lightGreen[500];
-                      });
-                      enableBottomButtons();
-                      return true;
-                    }
-                    grid.drawSecondPath2(lastNode);
-                    return false;
-                  },
-                  onFinished: (pathFound) {
-                    setState(() {
-                      isRunning = false;
-                      _color6 = Colors.lightGreen[500];
-                    });
-                    enableBottomButtons();
-                    if (!pathFound) {
-                      Scaffold.of(context).showSnackBar(snackBar);
-                    }
-                  });
-            },
-            items: <PopUpItem>[
-              PopUpItem(
-                child: Text(
-                  "A*",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
-                onPressed: () {
-                  model.setActivePAlgorithm(1);
-                },
-              ),
-              PopUpItem(
-                child: Text(
-                  "Dijkstra",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
-                onPressed: () {
-                  model.setActivePAlgorithm(2);
-                },
-              ),
-              PopUpItem(
-                child: Text(
-                  "Bidirectional Dijkstra",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16),
-                ),
-                onPressed: () {
-                  model.setActivePAlgorithm(3);
-                },
-              ),
-            ],
-          );
-        },
       ),
       bottomNavigationBar: BottomAppBar(
         color: Theme.of(context).bottomAppBarColor,
@@ -252,8 +225,9 @@ class _VisualizerPageState extends State<VisualizerPage> {
             children: <Widget>[
               Consumer<PopUpModel>(
                 builder: (_, model, __) {
-                  return PopUpButton(
+                  return FabWithPopUp2(
                     width: 130,
+                    popUpOffset: Offset(0, 100),
                     direction: AnimatedButtonPopUpDirection.vertical,
                     child: RichText(
                       textAlign: TextAlign.center,
@@ -324,38 +298,7 @@ class _VisualizerPageState extends State<VisualizerPage> {
                     color: _generationRunning
                         ? Colors.redAccent
                         : Theme.of(context).buttonColor,
-                    items: <PopUpItem>[
-                      PopUpItem(
-                        child: Text("Backtracker Maze",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 16,
-                            )),
-                        onPressed: () {
-                          model.setActiveAlgorithm(1, context);
-                        },
-                      ),
-                      PopUpItem(
-                        child: Text(
-                          "Random",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        onPressed: () {
-                          model.setActiveAlgorithm(2, context);
-                        },
-                      ),
-                      PopUpItem(
-                        child: Text(
-                          "Recursive    Maze",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        onPressed: () {
-                          model.setActiveAlgorithm(3, context);
-                        },
-                      )
-                    ],
+                    model: model,
                   );
                 },
               ),
@@ -363,105 +306,99 @@ class _VisualizerPageState extends State<VisualizerPage> {
                 width: 0,
                 height: 60,
               ),
-              Consumer<PopUpModel>(
-                builder: (_, model, __) {
-                  return PopUpButton(
-                      direction: AnimatedButtonPopUpDirection.horizontal,
-                      child: Image.asset("assets/images/brush.png"),
-                      onPressed: () {
-                        setActiveButton(1, context);
-                      },
-                      onLongPressed: () {
-                        setActiveButton(1, context);
-                      },
-                      disabled: _disabled1,
-                      color: _selectedButton == 1
-                          ? Colors.orangeAccent
-                          : Theme.of(context).buttonColor,
-                      items: <PopUpItem>[
-                        PopUpItem(
-                          child: Image.asset(
-                            "assets/images/wall_node.png",
-                            color: model.brushColor1,
-                            scale: 1.5,
-                          ),
-                          onPressed: () {
-                            model.setActiveBrush(1);
-                          },
-                        ),
-                        PopUpItem(
-                          child: Image.asset(
-                            "assets/images/start_node.png",
-                            color: model.brushColor2,
-                            scale: 1.9,
-                          ),
-                          onPressed: () {
-                            model.setActiveBrush(2);
-                          },
-                        ),
-                        PopUpItem(
-                          child: Image.asset(
-                            "assets/images/end_node.png",
-                            color: model.brushColor3,
-                            scale: 1.9,
-                          ),
-                          onPressed: () {
-                            model.setActiveBrush(3);
-                          },
-                        )
-                      ]);
-                },
-              ),
+              // Consumer<PopUpModel>(
+              //   builder: (_, model, __) {
+              //     return PopUpButton(
+              //         direction: AnimatedButtonPopUpDirection.horizontal,
+              //         child: Image.asset("assets/images/brush.png"),
+              //         onPressed: () {
+              //           setActiveButton(1, context);
+              //         },
+              //         onLongPressed: () {
+              //           setActiveButton(1, context);
+              //         },
+              //         disabled: _disabled1,
+              //         color: _selectedButton == 1
+              //             ? Colors.orangeAccent
+              //             : Theme.of(context).buttonColor,
+              //         items: <PopUpItem>[
+              //           PopUpItem(
+              //             child: Image.asset(
+              //               "assets/images/wall_node.png",
+              //               color: model.brushColor1,
+              //               scale: 1.5,
+              //             ),
+              //             onPressed: () {
+              //               model.setActiveBrush(1);
+              //             },
+              //           ),
+              //           PopUpItem(
+              //             child: Image.asset(
+              //               "assets/images/start_node.png",
+              //               color: model.brushColor2,
+              //               scale: 1.9,
+              //             ),
+              //             onPressed: () {
+              //               model.setActiveBrush(2);
+              //             },
+              //           ),
+              //           PopUpItem(
+              //             child: Image.asset(
+              //               "assets/images/end_node.png",
+              //               color: model.brushColor3,
+              //               scale: 1.9,
+              //             ),
+              //             onPressed: () {
+              //               model.setActiveBrush(3);
+              //             },
+              //           )
+              //         ]);
+              //   },
+              // ),
               Container(
                 width: 0,
                 height: 60,
               ),
-              PopUpButton(
-                child: Image.asset("assets/images/erase.png"),
-                onPressed: () {
-                  setActiveButton(2, context);
-                },
-                disabled: _disabled2,
-                color: _selectedButton == 2
-                    ? Colors.orangeAccent
-                    : Theme.of(context).buttonColor,
-              ),
+              // PopUpButton(
+              //   child: Image.asset("assets/images/erase.png"),
+              //   onPressed: () {
+              //     setActiveButton(2, context);
+              //   },
+              //   disabled: _disabled2,
+              //   color: _selectedButton == 2
+              //       ? Colors.orangeAccent
+              //       : Theme.of(context).buttonColor,
+              // ),
               Container(
                 width: 0,
                 height: 60,
               ),
-              PopUpButton(
-                child: Image.asset("assets/images/pan.png"),
-                onPressed: () {
-                  setActiveButton(3, context);
-                },
-                disabled: _disabled3,
-                color: _selectedButton == 3
-                    ? Colors.orangeAccent
-                    : Theme.of(context).buttonColor,
-              ),
+              // PopUpButton(
+              //   child: Image.asset("assets/images/pan.png"),
+              //   onPressed: () {
+              //     setActiveButton(3, context);
+              //   },
+              //   disabled: _disabled3,
+              //   color: _selectedButton == 3
+              //       ? Colors.orangeAccent
+              //       : Theme.of(context).buttonColor,
+              // ),
               Container(
                 width: 0,
                 height: 60,
               ),
-              PopUpButton(
-                child: Icon(
-                  Icons.delete,
-                  size: 35,
-                  color: Color(0xFF212121),
-                ),
-                color: Theme.of(context).buttonColor,
-                disabled: _disabled4,
-                onPressed: () {
-                  // setState(() {
-                  //   _color4 = Colors.redAccent;
-                  //   _disabled4 = true;
-                  //   _disabled5 = true;
-                  //   _disabled6 = true;
-                  // });
-                  grid.clearBoard(onFinished: () {});
-                },
-              ),
+              // PopUpButton(
+              //   child: Icon(
+              //     Icons.delete,
+              //     size: 35,
+              //     color: Color(0xFF212121),
+              //   ),
+              //   color: Theme.of(context).buttonColor,
+              //   disabled: _disabled4,
+              //   onPressed: () {
+              //     grid.clearBoard(onFinished: () {});
+              //   },
+              // ),
             ],
           ),
         ),

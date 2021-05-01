@@ -1,95 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:path_finder/config/size_config.dart';
-import 'package:path_finder/widgets/popUpButton/popUpItem.dart';
+import 'package:path_finder/pages/introduction_page.dart';
 import 'package:path_finder/widgets/popUpButton/fab_popup2.dart';
 import 'package:path_finder/widgets/popUpButton/popup_model.dart';
+import 'package:provider/provider.dart';
 
 enum OVERLAY_POSITION { TOP, BOTTOM }
 
-class FabWithPopUp extends StatefulWidget {
-  FabWithPopUp({
-    @required this.onPressed,
+class SettingFabWithPopUp extends StatefulWidget {
+  SettingFabWithPopUp({
     @required this.child,
     this.color = Colors.white,
-    this.onLongPressed,
     this.disabled = false,
     this.direction = AnimatedButtonPopUpDirection.horizontal,
-    this.width = 50,
-    this.height = 50,
     this.popUpOffset = const Offset(0, 0),
-    this.model,
   });
   final bool disabled;
-  final Function onPressed;
   final Widget child;
   final Color color;
-  final Function onLongPressed;
   final AnimatedButtonPopUpDirection direction;
-  final double width;
-  final double height;
+
   final Offset popUpOffset;
-  final PopUpModel model;
 
   @override
-  _FabWithPopUpState createState() => _FabWithPopUpState();
+  _SettingFabWithPopUpState createState() => _SettingFabWithPopUpState();
 }
 
-class _FabWithPopUpState extends State<FabWithPopUp>
+class _SettingFabWithPopUpState extends State<SettingFabWithPopUp>
     with SingleTickerProviderStateMixin {
   OverlayEntry _overlayEntry;
 
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-      ignoring: widget.disabled,
-      child: Opacity(
-        opacity: widget.disabled ? 0.5 : 1,
-        child: AnimatedContainer(
-          width: widget.width,
-          height: widget.height,
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.7),
-                blurRadius: widget.disabled ? 0 : 10,
-                spreadRadius: 0,
-              )
-            ],
-            borderRadius: BorderRadius.circular(50),
-            color: widget.color,
-          ),
-          duration: Duration(milliseconds: 120),
-          child: FlatButton(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-            padding: EdgeInsets.all(2),
-            child: widget.child, //Image.asset("assets/images/brush.png"),
-            onPressed: () {
-              widget.onPressed();
-            },
-            onLongPress: () {
-              if (widget.onLongPressed != null) {
-                widget.onLongPressed();
-              }
-              this._overlayEntry = _createOverlayEntry();
-              Overlay.of(context).insert(this._overlayEntry);
-            },
-          ),
-        ),
-      ),
+    return FlatButton(
+      height: 50,
+      minWidth: 50,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+      padding: EdgeInsets.all(2),
+      child: widget.child, //Image.asset("assets/images/brush.png"),
+      onPressed: () {
+        this._overlayEntry = _createOverlayEntry();
+        Overlay.of(context).insert(this._overlayEntry);
+      },
     );
   }
 
-  TapDownDetails _tapDownDetails;
   OVERLAY_POSITION _overlayPosition = OVERLAY_POSITION.TOP;
-
-  double _statusBarHeight;
-  double _toolBarHeight;
 
   OverlayEntry _createOverlayEntry() {
     var offset = Offset(100, 50);
-    _statusBarHeight = MediaQuery.of(context).padding.top;
-    _toolBarHeight = 50;
 
     return OverlayEntry(builder: (context) {
       return Stack(
@@ -121,6 +80,10 @@ class _FabWithPopUpState extends State<FabWithPopUp>
   }
 
   Widget body(BuildContext context, double offset) {
+    var model = Provider.of<PopUpModel>(context);
+
+    const double maxSpeed = 1; // milliseconds delay
+    const double minSpeed = 400; // milliseconds delay
     return Material(
       elevation: 10,
       borderRadius: BorderRadius.all(
@@ -142,7 +105,7 @@ class _FabWithPopUpState extends State<FabWithPopUp>
           children: [
             Container(
               child: Text(
-                'Choose Visualizing Algorithm',
+                'Settings',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.black,
@@ -150,36 +113,76 @@ class _FabWithPopUpState extends State<FabWithPopUp>
                     fontWeight: FontWeight.w800),
               ),
             ),
-            GridView.count(
-              crossAxisCount: 2,
-              crossAxisSpacing: SizeConfig.heightMultiplier * 3,
-              childAspectRatio: 16 / 16,
-              shrinkWrap: true,
-              children: <PopUpItem>[
-                PopUpItem(
-                  text: 'A*',
-                  image: 'assets/astar.gif',
-                  onPressed: () {
-                    widget.model.setActivePAlgorithm(1);
-                    _overlayEntry.remove();
-                  },
+            ListView(
+              children: <Widget>[
+                ListTile(
+                  title: Text('Speed of Algorithms'),
+                  subtitle: Text(() {
+                    switch (model.speed) {
+                      case 400:
+                        return "Slow";
+                        break;
+                      case 1:
+                        return "Fast";
+                        break;
+                      default:
+                        return "Average";
+                    }
+                  }()),
+                  trailing: Selector<PopUpModel, int>(
+                      selector: (context, model) => model.speed,
+                      builder: (_, speed, __) {
+                        return Container(
+                          width: 200,
+                          child: Slider.adaptive(
+                            activeColor: Colors.lightBlue,
+                            min: maxSpeed,
+                            max: minSpeed,
+                            divisions: 2,
+                            value: speed.toDouble() * -1 + minSpeed + maxSpeed,
+                            onChanged: (val) {
+                              model.speed =
+                                  (val * -1 + minSpeed + maxSpeed).toInt();
+                            },
+                          ),
+                        );
+                      }),
                 ),
-                PopUpItem(
-                  text: 'Dijkstra',
-                  image: 'assets/dijkstra.gif',
-                  onPressed: () {
-                    widget.model.setActivePAlgorithm(2);
-                    _overlayEntry.remove();
-                  },
+                ListTile(
+                  title: Text('Dark Theme'),
+                  trailing: Switch.adaptive(
+                    onChanged: (state) {
+                      if (state) {
+                        model.brightness = Brightness.dark;
+                      } else {
+                        model.brightness = Brightness.light;
+                      }
+                    },
+                    value: (() {
+                      if (model.brightness == Brightness.light) {
+                        return false;
+                      }
+                      return true;
+                    }()),
+                  ),
                 ),
-                PopUpItem(
-                  text: 'Bidirectional Dijkstra',
-                  image: 'assets/dijkstra.gif',
-                  onPressed: () {
-                    widget.model.setActivePAlgorithm(3);
-                    _overlayEntry.remove();
-                  },
-                ),
+                ListTile(
+                    title: Text('Forgot the tools?'),
+                    trailing: FlatButton(
+                      child: Text("Show Introduction"),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => IntroductionPage(
+                              onDone: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ))
               ],
             ),
           ],

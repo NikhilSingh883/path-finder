@@ -7,7 +7,6 @@ import 'package:path_finder/logic/algorithms.dart';
 import 'package:path_finder/widgets/grid.dart';
 import 'package:path_finder/widgets/grid_gesture_detector.dart';
 import 'package:path_finder/widgets/image_node.dart';
-import 'package:path_finder/widgets/painters.dart';
 import 'package:path_finder/widgets/visited_node_paint.dart';
 import 'package:path_finder/widgets/wall_node_paint.dart';
 import 'package:provider/provider.dart';
@@ -280,7 +279,7 @@ class Grid extends ChangeNotifier {
             left: 0.50 + i * (unitSize.toDouble() + 1),
             top: 0.50 + j * (unitSize.toDouble() + 1),
             child: WallNodePaintWidget(
-              color: Color(0xff212121),
+              color: Colors.white,
               unitSize: unitSize,
               i: i,
               j: j,

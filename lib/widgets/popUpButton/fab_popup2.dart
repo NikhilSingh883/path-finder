@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:path_finder/config/size_config.dart';
 import 'package:path_finder/widgets/popUpButton/popUpItem.dart';
-import 'package:path_finder/widgets/popUpButton/fab_popup2.dart';
 import 'package:path_finder/widgets/popUpButton/popup_model.dart';
+
+import 'popup.dart';
+
+enum AnimatedButtonPopUpDirection {
+  horizontal,
+  vertical,
+}
 
 enum OVERLAY_POSITION { TOP, BOTTOM }
 
-class FabWithPopUp extends StatefulWidget {
-  FabWithPopUp({
+class FabWithPopUp2 extends StatefulWidget {
+  FabWithPopUp2({
     @required this.onPressed,
     @required this.child,
     this.color = Colors.white,
@@ -31,10 +37,10 @@ class FabWithPopUp extends StatefulWidget {
   final PopUpModel model;
 
   @override
-  _FabWithPopUpState createState() => _FabWithPopUpState();
+  _FabWithPopUp2State createState() => _FabWithPopUp2State();
 }
 
-class _FabWithPopUpState extends State<FabWithPopUp>
+class _FabWithPopUp2State extends State<FabWithPopUp2>
     with SingleTickerProviderStateMixin {
   OverlayEntry _overlayEntry;
 
@@ -106,7 +112,7 @@ class _FabWithPopUpState extends State<FabWithPopUp>
           ),
           Positioned(
             left: 0,
-            top: SizeConfig.heightMultiplier * 35,
+            top: SizeConfig.heightMultiplier * 38,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -136,13 +142,13 @@ class _FabWithPopUpState extends State<FabWithPopUp>
           borderRadius: BorderRadius.all(
             Radius.circular(SizeConfig.widthMultiplier * 10),
           ),
-          color: Colors.orange[300],
+          color: Colors.teal[100],
         ),
         child: Column(
           children: [
             Container(
               child: Text(
-                'Choose Visualizing Algorithm',
+                'Choose Wall Generation Algorithm',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.black,
@@ -157,29 +163,29 @@ class _FabWithPopUpState extends State<FabWithPopUp>
               shrinkWrap: true,
               children: <PopUpItem>[
                 PopUpItem(
-                  text: 'A*',
-                  image: 'assets/astar.gif',
+                  text: "Backtracker Maze",
                   onPressed: () {
-                    widget.model.setActivePAlgorithm(1);
+                    widget.model.setActiveAlgorithm(1, context);
                     _overlayEntry.remove();
                   },
+                  image: 'assets/backtrack.gif',
                 ),
                 PopUpItem(
-                  text: 'Dijkstra',
-                  image: 'assets/dijkstra.gif',
+                  text: "Random",
                   onPressed: () {
-                    widget.model.setActivePAlgorithm(2);
+                    widget.model.setActiveAlgorithm(2, context);
                     _overlayEntry.remove();
                   },
+                  image: 'assets/ramdom.gif',
                 ),
                 PopUpItem(
-                  text: 'Bidirectional Dijkstra',
-                  image: 'assets/dijkstra.gif',
+                  text: "Recursive Maze",
                   onPressed: () {
-                    widget.model.setActivePAlgorithm(3);
+                    widget.model.setActiveAlgorithm(3, context);
                     _overlayEntry.remove();
                   },
-                ),
+                  image: 'assets/division.gif',
+                )
               ],
             ),
           ],
@@ -208,14 +214,14 @@ class OpenPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
       ..style = PaintingStyle.fill
-      ..color = Colors.orange[300]
+      ..color = Colors.teal[300]
       ..isAntiAlias = true;
     switch (overlayPosition) {
       case OVERLAY_POSITION.TOP:
         _drawThreeShape(canvas,
-            first: Offset(SizeConfig.widthMultiplier * 75, 0),
-            second: Offset(SizeConfig.widthMultiplier * 85, 0),
-            third: Offset(SizeConfig.widthMultiplier * 80,
+            first: Offset(SizeConfig.widthMultiplier * 20, 0),
+            second: Offset(SizeConfig.widthMultiplier * 30, 0),
+            third: Offset(SizeConfig.widthMultiplier * 25,
                 SizeConfig.widthMultiplier * 5),
             size: size,
             paint: paint);
