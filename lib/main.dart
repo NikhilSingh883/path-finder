@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:path_finder/widgets/popUpButton/popup_model.dart';
 import 'package:provider/provider.dart';
@@ -7,7 +8,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'config/size_config.dart';
 import 'pages/home_page.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   bool launch = true;

@@ -81,7 +81,15 @@ class _VisualizerPageState extends State<VisualizerPage> {
 
   bool drawTool = true;
 
-  Grid grid = Grid(50, 90, 50, 20, 20, 25, 60);
+  Grid grid = Grid(
+    ((SizeConfig.widthMultiplier * 100) / 25).toInt(),
+    ((SizeConfig.heightMultiplier * 100) / 25).toInt(),
+    25,
+    2,
+    5,
+    8,
+    10,
+  );
 
   double brushSize = 0.1;
 
@@ -380,11 +388,11 @@ class _VisualizerPageState extends State<VisualizerPage> {
                 child: Stack(
                   children: [
                     CustomPaint(
-                      size: Size(size.width, 80),
+                      size: Size(size.width, SizeConfig.heightMultiplier * 10),
                       painter: BNBCustomPainter(popupmodel),
                     ),
                     Center(
-                      heightFactor: 0.6,
+                      // heightFactor: 0.6,
                       child: FloatingActionButton(
                         backgroundColor:
                             !isRunning ? Colors.orange : Colors.orange[100],
@@ -411,7 +419,7 @@ class _VisualizerPageState extends State<VisualizerPage> {
               left: 0,
               child: Container(
                 child: Center(
-                  heightFactor: 2,
+                  heightFactor: 1.5,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -471,7 +479,7 @@ class _VisualizerPageState extends State<VisualizerPage> {
                         },
                       ),
                       SizedBox(
-                        width: SizeConfig.widthMultiplier * 6,
+                        width: SizeConfig.widthMultiplier * 12,
                       ),
                       Container(
                         padding: EdgeInsets.only(
@@ -503,7 +511,7 @@ class _VisualizerPageState extends State<VisualizerPage> {
               right: 0,
               child: Container(
                 child: Center(
-                  heightFactor: 2,
+                  heightFactor: 1.5,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -528,7 +536,7 @@ class _VisualizerPageState extends State<VisualizerPage> {
                         ),
                       ),
                       SizedBox(
-                        width: SizeConfig.widthMultiplier * 6,
+                        width: SizeConfig.widthMultiplier * 12,
                       ),
                       AnimatedButtonWithPopUp(
                         height: SizeConfig.heightMultiplier * 5,
