@@ -106,7 +106,7 @@ class _FabWithPopUpState extends State<FabWithPopUp>
           ),
           Positioned(
             left: 0,
-            top: SizeConfig.heightMultiplier * 35,
+            top: SizeConfig.heightMultiplier * 4,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -213,9 +213,12 @@ class OpenPainter extends CustomPainter {
     switch (overlayPosition) {
       case OVERLAY_POSITION.TOP:
         _drawThreeShape(canvas,
-            first: Offset(SizeConfig.widthMultiplier * 75, 0),
-            second: Offset(SizeConfig.widthMultiplier * 85, 0),
-            third: Offset(SizeConfig.widthMultiplier * 80,
+            first: Offset(SizeConfig.widthMultiplier * 85, 0),
+            second: Offset(
+              SizeConfig.widthMultiplier * 102,
+              -SizeConfig.heightMultiplier * 7,
+            ),
+            third: Offset(SizeConfig.widthMultiplier * 90,
                 SizeConfig.widthMultiplier * 5),
             size: size,
             paint: paint);

@@ -32,12 +32,10 @@ class _SettingFabWithPopUpState extends State<SettingFabWithPopUp>
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
-      height: 50,
-      minWidth: 50,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-      padding: EdgeInsets.all(2),
-      child: widget.child, //Image.asset("assets/images/brush.png"),
+    return FloatingActionButton(
+      backgroundColor: Colors.purple[100],
+      child: widget.child,
+      mini: true,
       onPressed: () {
         this._overlayEntry = _createOverlayEntry();
         Overlay.of(context).insert(this._overlayEntry);
@@ -65,7 +63,7 @@ class _SettingFabWithPopUpState extends State<SettingFabWithPopUp>
           ),
           Positioned(
             left: 0,
-            top: SizeConfig.heightMultiplier * 35,
+            top: SizeConfig.heightMultiplier * 10,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -99,43 +97,54 @@ class _SettingFabWithPopUpState extends State<SettingFabWithPopUp>
           borderRadius: BorderRadius.all(
             Radius.circular(SizeConfig.widthMultiplier * 10),
           ),
-          color: Colors.orange[300],
+          color: Colors.brown[400],
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               child: Text(
                 'Settings',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.black,
+                    // color: Colors.black,
                     fontSize: SizeConfig.heightMultiplier * 3,
                     fontWeight: FontWeight.w800),
               ),
             ),
             ListView(
+              shrinkWrap: true,
               children: <Widget>[
-                ListTile(
-                  title: Text('Speed of Algorithms'),
-                  subtitle: Text(() {
-                    switch (model.speed) {
-                      case 400:
-                        return "Slow";
-                        break;
-                      case 1:
-                        return "Fast";
-                        break;
-                      default:
-                        return "Average";
-                    }
-                  }()),
-                  trailing: Selector<PopUpModel, int>(
+                Row(
+                  children: [
+                    Text(
+                      'Speed of Algorithms   :  ',
+                      style: TextStyle(
+                        fontSize: SizeConfig.heightMultiplier * 2,
+                      ),
+                    ),
+                    Text(() {
+                      switch (model.speed) {
+                        case 400:
+                          return "Slow";
+                          break;
+                        case 1:
+                          return "Fast";
+                          break;
+                        default:
+                          return "Average";
+                      }
+                    }()),
+                  ],
+                ),
+                Container(
+                  child: Selector<PopUpModel, int>(
                       selector: (context, model) => model.speed,
                       builder: (_, speed, __) {
                         return Container(
                           width: 200,
                           child: Slider.adaptive(
-                            activeColor: Colors.lightBlue,
+                            activeColor: Colors.red,
                             min: maxSpeed,
                             max: minSpeed,
                             divisions: 2,
@@ -149,7 +158,13 @@ class _SettingFabWithPopUpState extends State<SettingFabWithPopUp>
                       }),
                 ),
                 ListTile(
-                  title: Text('Dark Theme'),
+                  title: Text(
+                    'Dark Theme',
+                    style: TextStyle(
+                      fontSize: SizeConfig.heightMultiplier * 2,
+                      // color: Colors.,
+                    ),
+                  ),
                   trailing: Switch.adaptive(
                     onChanged: (state) {
                       if (state) {
@@ -167,9 +182,19 @@ class _SettingFabWithPopUpState extends State<SettingFabWithPopUp>
                   ),
                 ),
                 ListTile(
-                    title: Text('Forgot the tools?'),
+                    title: Text(
+                      'Forgot the tools?',
+                      style: TextStyle(
+                        fontSize: SizeConfig.heightMultiplier * 2,
+                      ),
+                    ),
                     trailing: FlatButton(
-                      child: Text("Show Introduction"),
+                      child: Text(
+                        "Show Introduction",
+                        style: TextStyle(
+                          fontSize: SizeConfig.heightMultiplier * 2,
+                        ),
+                      ),
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -211,14 +236,17 @@ class OpenPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
       ..style = PaintingStyle.fill
-      ..color = Colors.orange[300]
+      ..color = Colors.brown[400]
       ..isAntiAlias = true;
     switch (overlayPosition) {
       case OVERLAY_POSITION.TOP:
         _drawThreeShape(canvas,
-            first: Offset(SizeConfig.widthMultiplier * 75, 0),
-            second: Offset(SizeConfig.widthMultiplier * 85, 0),
-            third: Offset(SizeConfig.widthMultiplier * 80,
+            first: Offset(SizeConfig.widthMultiplier * 85, 0),
+            second: Offset(
+              SizeConfig.widthMultiplier * 102,
+              -SizeConfig.heightMultiplier * 7,
+            ),
+            third: Offset(SizeConfig.widthMultiplier * 90,
                 SizeConfig.widthMultiplier * 5),
             size: size,
             paint: paint);
@@ -257,5 +285,48 @@ class OpenPainter extends CustomPainter {
       ..moveTo(first.dx, first.dy)
       ..lineTo(second.dx, second.dy);
     canvas.drawPath(path1, paint);
+  }
+}
+
+class CircleThumbShape extends SliderComponentShape {
+  final double thumbRadius;
+
+  const CircleThumbShape({
+    this.thumbRadius = 6.0,
+  });
+
+  @override
+  Size getPreferredSize(bool isEnabled, bool isDiscrete) {
+    return Size.fromRadius(thumbRadius);
+  }
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset center, {
+    Animation<double> activationAnimation,
+    Animation<double> enableAnimation,
+    bool isDiscrete,
+    TextPainter labelPainter,
+    RenderBox parentBox,
+    SliderThemeData sliderTheme,
+    TextDirection textDirection,
+    double value,
+    double textScaleFactor,
+    Size sizeWithOverflow,
+  }) {
+    final Canvas canvas = context.canvas;
+
+    final fillPaint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.fill;
+
+    final borderPaint = Paint()
+      ..color = sliderTheme.thumbColor
+      ..strokeWidth = 3
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawCircle(center, thumbRadius, fillPaint);
+    canvas.drawCircle(center, thumbRadius, borderPaint);
   }
 }

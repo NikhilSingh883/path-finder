@@ -279,7 +279,7 @@ class Grid extends ChangeNotifier {
             left: 0.50 + i * (unitSize.toDouble() + 1),
             top: 0.50 + j * (unitSize.toDouble() + 1),
             child: WallNodePaintWidget(
-              color: Colors.white,
+              color: Colors.black,
               unitSize: unitSize,
               i: i,
               j: j,

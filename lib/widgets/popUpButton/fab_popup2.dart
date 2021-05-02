@@ -107,12 +107,12 @@ class _FabWithPopUp2State extends State<FabWithPopUp2>
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              color: Colors.blueGrey.withOpacity(0.5),
+              color: Colors.blueGrey.withOpacity(0.4),
             ),
           ),
           Positioned(
             left: 0,
-            top: SizeConfig.heightMultiplier * 38,
+            top: SizeConfig.heightMultiplier * 15,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -214,14 +214,17 @@ class OpenPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
       ..style = PaintingStyle.fill
-      ..color = Colors.teal[300]
+      ..color = Colors.teal[100]
       ..isAntiAlias = true;
     switch (overlayPosition) {
       case OVERLAY_POSITION.TOP:
         _drawThreeShape(canvas,
-            first: Offset(SizeConfig.widthMultiplier * 20, 0),
-            second: Offset(SizeConfig.widthMultiplier * 30, 0),
-            third: Offset(SizeConfig.widthMultiplier * 25,
+            first: Offset(SizeConfig.widthMultiplier * 85, 0),
+            second: Offset(
+              SizeConfig.widthMultiplier * 102,
+              -SizeConfig.heightMultiplier * 7,
+            ),
+            third: Offset(SizeConfig.widthMultiplier * 90,
                 SizeConfig.widthMultiplier * 5),
             size: size,
             paint: paint);
