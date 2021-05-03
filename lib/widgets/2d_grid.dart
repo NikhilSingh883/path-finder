@@ -66,12 +66,12 @@ class Grid extends ChangeNotifier {
 
   double width;
   double height;
-  final int rows;
-  final int columns;
+  int rows;
+  int columns;
 
   bool _isPanning = false;
   double scale = 1;
-  final double unitSize;
+  double unitSize;
   List<List<Widget>> nodes;
   List<List<int>> nodeTypes;
   List<List<Color>> staticNodes;
@@ -192,6 +192,11 @@ class Grid extends ChangeNotifier {
 
   void drawSecondPath2(Node lastNode) {
     currentSecondNode = lastNode;
+    notifyListeners();
+  }
+
+  void updateUnitSize(double size) {
+    unitSize = size;
     notifyListeners();
   }
 

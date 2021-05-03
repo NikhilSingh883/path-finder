@@ -106,7 +106,7 @@ class _FabWithPopUpState extends State<FabWithPopUp>
           ),
           Positioned(
             left: 0,
-            top: SizeConfig.heightMultiplier * 4,
+            top: SizeConfig.heightMultiplier * 18,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -150,37 +150,39 @@ class _FabWithPopUpState extends State<FabWithPopUp>
                     fontWeight: FontWeight.w800),
               ),
             ),
-            GridView.count(
-              crossAxisCount: 2,
-              crossAxisSpacing: SizeConfig.heightMultiplier * 3,
-              childAspectRatio: 16 / 16,
-              shrinkWrap: true,
-              children: <PopUpItem>[
-                PopUpItem(
-                  text: 'A*',
-                  image: 'assets/astar.gif',
-                  onPressed: () {
-                    widget.model.setActivePAlgorithm(1);
-                    _overlayEntry.remove();
-                  },
-                ),
-                PopUpItem(
-                  text: 'Dijkstra',
-                  image: 'assets/dijkstra.gif',
-                  onPressed: () {
-                    widget.model.setActivePAlgorithm(2);
-                    _overlayEntry.remove();
-                  },
-                ),
-                PopUpItem(
-                  text: 'Bidirectional Dijkstra',
-                  image: 'assets/dijkstra.gif',
-                  onPressed: () {
-                    widget.model.setActivePAlgorithm(3);
-                    _overlayEntry.remove();
-                  },
-                ),
-              ],
+            Container(
+              margin: EdgeInsets.only(top: SizeConfig.heightMultiplier * 10),
+              height: SizeConfig.heightMultiplier * 20,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                children: <PopUpItem>[
+                  PopUpItem(
+                    text: 'A*',
+                    image: 'assets/astar.gif',
+                    onPressed: () {
+                      widget.model.setActivePAlgorithm(1);
+                      _overlayEntry.remove();
+                    },
+                  ),
+                  PopUpItem(
+                    text: 'Dijkstra',
+                    image: 'assets/dijkstra.gif',
+                    onPressed: () {
+                      widget.model.setActivePAlgorithm(2);
+                      _overlayEntry.remove();
+                    },
+                  ),
+                  PopUpItem(
+                    text: 'Bidirectional Dijkstra',
+                    image: 'assets/dijkstra.gif',
+                    onPressed: () {
+                      widget.model.setActivePAlgorithm(3);
+                      _overlayEntry.remove();
+                    },
+                  ),
+                ],
+              ),
             ),
           ],
         ),

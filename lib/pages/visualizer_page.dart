@@ -7,7 +7,6 @@ import 'package:path_finder/widgets/2d_grid.dart';
 import 'package:path_finder/widgets/popUpButton/btn.dart';
 import 'package:path_finder/widgets/popUpButton/fab_popup.dart';
 import 'package:path_finder/widgets/popUpButton/fab_popup2.dart';
-import 'package:path_finder/widgets/popUpButton/popUpItem.dart';
 import 'package:path_finder/widgets/popUpButton/popup_model.dart';
 import 'package:path_finder/widgets/popUpButton/setting_fab_popup.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +20,16 @@ class _VisualizerPageState extends State<VisualizerPage> {
   bool isRunning = false;
   int _selectedButton = 1;
   bool _generationRunning = false;
+
+  Grid grid = Grid(
+    60,
+    120,
+    25,
+    10,
+    12,
+    30,
+    70,
+  );
 
   void setActiveButton(int i, BuildContext context) {
     switch (i) {
@@ -81,16 +90,6 @@ class _VisualizerPageState extends State<VisualizerPage> {
 
   bool drawTool = true;
 
-  Grid grid = Grid(
-    ((SizeConfig.widthMultiplier * 100) / 25).toInt(),
-    ((SizeConfig.heightMultiplier * 100) / 25).toInt(),
-    25,
-    2,
-    5,
-    8,
-    10,
-  );
-
   double brushSize = 0.1;
 
   @override
@@ -108,6 +107,7 @@ class _VisualizerPageState extends State<VisualizerPage> {
       content: Text("Path Doesn't exist"),
       duration: Duration(milliseconds: 1400),
     );
+
     return Scaffold(
         floatingActionButton: Container(
           margin:
@@ -383,16 +383,17 @@ class _VisualizerPageState extends State<VisualizerPage> {
               bottom: 0,
               left: 0,
               child: Container(
-                width: size.width,
-                // height: 80,
+                width: SizeConfig.widthMultiplier * 100,
+                height: SizeConfig.heightMultiplier * 10,
                 child: Stack(
                   children: [
                     CustomPaint(
-                      size: Size(size.width, SizeConfig.heightMultiplier * 10),
+                      size: Size(SizeConfig.widthMultiplier * 100,
+                          SizeConfig.heightMultiplier * 10),
                       painter: BNBCustomPainter(popupmodel),
                     ),
                     Center(
-                      // heightFactor: 0.6,
+                      heightFactor: 0.7,
                       child: FloatingActionButton(
                         backgroundColor:
                             !isRunning ? Colors.orange : Colors.orange[100],
@@ -419,12 +420,12 @@ class _VisualizerPageState extends State<VisualizerPage> {
               left: 0,
               child: Container(
                 child: Center(
-                  heightFactor: 1.5,
+                  heightFactor: 1.2,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       SizedBox(
-                        width: SizeConfig.widthMultiplier * 3,
+                        width: SizeConfig.widthMultiplier,
                       ),
                       Consumer<PopUpModel>(
                         builder: (_, model, __) {
@@ -479,11 +480,11 @@ class _VisualizerPageState extends State<VisualizerPage> {
                         },
                       ),
                       SizedBox(
-                        width: SizeConfig.widthMultiplier * 12,
+                        width: SizeConfig.widthMultiplier * 11,
                       ),
                       Container(
                         padding: EdgeInsets.only(
-                            bottom: SizeConfig.heightMultiplier * 2),
+                            bottom: SizeConfig.heightMultiplier * 3),
                         child: AnimatedButtonWithPopUp(
                           height: SizeConfig.heightMultiplier * 5,
                           child: Image.asset(
@@ -511,13 +512,13 @@ class _VisualizerPageState extends State<VisualizerPage> {
               right: 0,
               child: Container(
                 child: Center(
-                  heightFactor: 1.5,
+                  heightFactor: 1.2,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Container(
                         padding: EdgeInsets.only(
-                            bottom: SizeConfig.heightMultiplier * 2),
+                            bottom: SizeConfig.heightMultiplier * 3),
                         child: AnimatedButtonWithPopUp(
                           height: SizeConfig.heightMultiplier * 5,
                           child: Image.asset(
@@ -536,7 +537,7 @@ class _VisualizerPageState extends State<VisualizerPage> {
                         ),
                       ),
                       SizedBox(
-                        width: SizeConfig.widthMultiplier * 12,
+                        width: SizeConfig.widthMultiplier * 11,
                       ),
                       AnimatedButtonWithPopUp(
                         height: SizeConfig.heightMultiplier * 5,
@@ -553,7 +554,7 @@ class _VisualizerPageState extends State<VisualizerPage> {
                         },
                       ),
                       SizedBox(
-                        width: SizeConfig.widthMultiplier * 3,
+                        width: SizeConfig.widthMultiplier,
                       ),
                     ],
                   ),

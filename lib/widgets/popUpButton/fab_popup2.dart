@@ -112,7 +112,7 @@ class _FabWithPopUp2State extends State<FabWithPopUp2>
           ),
           Positioned(
             left: 0,
-            top: SizeConfig.heightMultiplier * 15,
+            top: SizeConfig.heightMultiplier * 27,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -156,37 +156,39 @@ class _FabWithPopUp2State extends State<FabWithPopUp2>
                     fontWeight: FontWeight.w800),
               ),
             ),
-            GridView.count(
-              crossAxisCount: 2,
-              crossAxisSpacing: SizeConfig.heightMultiplier * 3,
-              childAspectRatio: 16 / 16,
-              shrinkWrap: true,
-              children: <PopUpItem>[
-                PopUpItem(
-                  text: "Backtracker Maze",
-                  onPressed: () {
-                    widget.model.setActiveAlgorithm(1, context);
-                    _overlayEntry.remove();
-                  },
-                  image: 'assets/backtrack.gif',
-                ),
-                PopUpItem(
-                  text: "Random",
-                  onPressed: () {
-                    widget.model.setActiveAlgorithm(2, context);
-                    _overlayEntry.remove();
-                  },
-                  image: 'assets/ramdom.gif',
-                ),
-                PopUpItem(
-                  text: "Recursive Maze",
-                  onPressed: () {
-                    widget.model.setActiveAlgorithm(3, context);
-                    _overlayEntry.remove();
-                  },
-                  image: 'assets/division.gif',
-                )
-              ],
+            Container(
+              margin: EdgeInsets.only(top: SizeConfig.heightMultiplier * 10),
+              height: SizeConfig.heightMultiplier * 20,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                children: <PopUpItem>[
+                  PopUpItem(
+                    text: "Backtracker Maze",
+                    onPressed: () {
+                      widget.model.setActiveAlgorithm(1, context);
+                      _overlayEntry.remove();
+                    },
+                    image: 'assets/backtrack.gif',
+                  ),
+                  PopUpItem(
+                    text: "Random",
+                    onPressed: () {
+                      widget.model.setActiveAlgorithm(2, context);
+                      _overlayEntry.remove();
+                    },
+                    image: 'assets/ramdom.gif',
+                  ),
+                  PopUpItem(
+                    text: "Recursive Maze",
+                    onPressed: () {
+                      widget.model.setActiveAlgorithm(3, context);
+                      _overlayEntry.remove();
+                    },
+                    image: 'assets/division.gif',
+                  )
+                ],
+              ),
             ),
           ],
         ),

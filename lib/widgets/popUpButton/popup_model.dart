@@ -19,8 +19,14 @@ class PopUpModel extends ChangeNotifier {
   }
 
   int _speed = 1;
-
+  double _unitSize = 25;
   int get speed => _speed;
+  double get unitSize => _unitSize;
+
+  set unitS(value) {
+    _unitSize = value;
+    notifyListeners();
+  }
 
   set speed(value) {
     _speed = value;
@@ -48,23 +54,15 @@ class PopUpModel extends ChangeNotifier {
   void setActiveBrush(int i) {
     switch (i) {
       case 1: //wall
-        brushColor1 = Colors.orangeAccent;
-        brushColor2 = Color(0xFF2E2E2E);
-        brushColor3 = Color(0xFF2E2E2E);
+
         selectedBrush = Brush.wall;
         notifyListeners();
         break;
       case 2: //start
-        brushColor1 = Color(0xFF2E2E2E);
-        brushColor2 = Colors.orangeAccent;
-        brushColor3 = Color(0xFF2E2E2E);
         selectedBrush = Brush.start;
         notifyListeners();
         break;
       case 3: //finish
-        brushColor1 = Color(0xFF2E2E2E);
-        brushColor2 = Color(0xFF2E2E2E);
-        brushColor3 = Colors.orangeAccent;
         selectedBrush = Brush.finish;
         notifyListeners();
         break;

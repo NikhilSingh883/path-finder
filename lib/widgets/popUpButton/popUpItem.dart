@@ -11,34 +11,35 @@ class PopUpItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPressed,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
-            child: Text(
-              text,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.red[700],
-                fontSize: SizeConfig.heightMultiplier * 2,
-                fontWeight: FontWeight.w600,
+      child: Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.widthMultiplier * 2,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              child: Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.red[700],
+                  fontSize: SizeConfig.heightMultiplier * 2,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: SizeConfig.heightMultiplier,
-          ),
-          Container(
-            height: SizeConfig.heightMultiplier * 13,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
+            SizedBox(
+              height: SizeConfig.heightMultiplier,
             ),
-            child: Image(
-              image: AssetImage(image),
-              fit: BoxFit.fill,
+            CircleAvatar(
+              radius: SizeConfig.heightMultiplier * 8,
+              backgroundImage: AssetImage(
+                image,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

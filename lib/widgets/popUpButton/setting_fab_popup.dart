@@ -5,6 +5,8 @@ import 'package:path_finder/widgets/popUpButton/fab_popup2.dart';
 import 'package:path_finder/widgets/popUpButton/popup_model.dart';
 import 'package:provider/provider.dart';
 
+import '../2d_grid.dart';
+
 enum OVERLAY_POSITION { TOP, BOTTOM }
 
 class SettingFabWithPopUp extends StatefulWidget {
@@ -63,7 +65,7 @@ class _SettingFabWithPopUpState extends State<SettingFabWithPopUp>
           ),
           Positioned(
             left: 0,
-            top: SizeConfig.heightMultiplier * 10,
+            top: SizeConfig.heightMultiplier * 12,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -79,7 +81,6 @@ class _SettingFabWithPopUpState extends State<SettingFabWithPopUp>
 
   Widget body(BuildContext context, double offset) {
     var model = Provider.of<PopUpModel>(context);
-
     const double maxSpeed = 1; // milliseconds delay
     const double minSpeed = 400; // milliseconds delay
     return Material(
@@ -196,6 +197,8 @@ class _SettingFabWithPopUpState extends State<SettingFabWithPopUp>
                         ),
                       ),
                       onPressed: () {
+                        _overlayEntry.remove();
+                        // Navigator.of(context).pop();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
