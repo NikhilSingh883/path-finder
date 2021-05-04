@@ -75,7 +75,7 @@ class PathPainter extends CustomPainter {
     Paint paint = Paint()
       ..color = Colors.amber
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 30;
+      ..strokeWidth = unitSize / 2;
 
     Path path = Path();
     drawingNode = currentNode;
@@ -105,7 +105,7 @@ class SecondPathPainter extends CustomPainter {
     Paint paint = Paint()
       ..color = Colors.amber
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 30;
+      ..strokeWidth = unitSize / 2;
 
     Path path = Path();
     drawingNode = currentNode;

@@ -131,7 +131,9 @@ class _PopUpWidgetState extends State<PopUpWidget>
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: widget.items.map((widget) {
                                 return Flexible(
+                                  // ignore: deprecated_member_use
                                   child: FlatButton(
+                                      key: UniqueKey(),
                                       padding: EdgeInsets.all(0),
                                       onPressed: () {
                                         removePopUp();
@@ -146,7 +148,9 @@ class _PopUpWidgetState extends State<PopUpWidget>
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: widget.items.map((widget) {
                                 return Flexible(
+                                  // ignore: deprecated_member_use
                                   child: FlatButton(
+                                      key: UniqueKey(),
                                       padding: EdgeInsets.all(0),
                                       onPressed: () {
                                         widget.onPressed();

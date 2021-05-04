@@ -420,8 +420,6 @@ class Grid extends ChangeNotifier {
   }
 
   void clearBoard({Function onFinished}) {
-    int i = 0;
-    int j = 0;
     clearPaths();
     for (var i = 0; i < nodeTypes.length; i++) {
       for (var j = 0; j < nodeTypes[0].length; j++) {

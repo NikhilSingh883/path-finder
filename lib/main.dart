@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_finder/provider/changePage.dart';
 
 import 'package:path_finder/widgets/popUpButton/popup_model.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ void main() {
   runApp(MyApp());
 }
 
+// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
   bool launch = true;
   @override
@@ -30,13 +32,18 @@ class MyApp extends StatelessWidget {
           _getTheme().then((bri) => model.brightness = bri);
           return LayoutBuilder(builder: (context, constraints) {
             SizeConfig().init(constraints);
-            return MaterialApp(
-              theme: ThemeData(
-                primarySwatch: Colors.blueGrey,
-                brightness: brightness,
-              ),
-              home: Scaffold(
-                body: HomePage(),
+            return ChangeNotifierProvider.value(
+              value: ChangePage(),
+              child: MaterialApp(
+                theme: ThemeData(
+                  primarySwatch: Colors.red,
+                  brightness: brightness,
+                  visualDensity: VisualDensity.adaptivePlatformDensity,
+                  fontFamily: 'Helvetica',
+                ),
+                home: Scaffold(
+                  body: HomePage(),
+                ),
               ),
             );
           });

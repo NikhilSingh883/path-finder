@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:path_finder/config/size_config.dart';
 import 'package:path_finder/logic/algorithms.dart';
 import 'package:path_finder/logic/generation_algorithm.dart';
@@ -23,7 +24,7 @@ class _VisualizerPageState extends State<VisualizerPage> {
 
   Grid grid = Grid(
     60,
-    120,
+    130,
     25,
     10,
     12,
@@ -93,19 +94,33 @@ class _VisualizerPageState extends State<VisualizerPage> {
   double brushSize = 0.1;
 
   @override
-  initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     var popupmodel = Provider.of<PopUpModel>(context, listen: false);
     var operationModel =
         Provider.of<OperationCountModel>(context, listen: false);
     final snackBar = SnackBar(
-      content: Text("Path Doesn't exist"),
-      duration: Duration(milliseconds: 1400),
+      content: Text(
+        "Path Doesn't exist",
+        textAlign: TextAlign.center,
+        style: GoogleFonts.emilysCandy(
+          fontSize: SizeConfig.heightMultiplier * 2,
+        ),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(10),
+        ),
+      ),
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.symmetric(
+        horizontal: SizeConfig.widthMultiplier * 5,
+        vertical: SizeConfig.heightMultiplier * 2,
+      ),
+      padding: EdgeInsets.symmetric(vertical: SizeConfig.heightMultiplier),
+      duration: Duration(
+        milliseconds: 1400,
+      ),
+      backgroundColor: Colors.cyan,
     );
 
     return Scaffold(
@@ -137,7 +152,7 @@ class _VisualizerPageState extends State<VisualizerPage> {
                       textAlign: TextAlign.center,
                       text: TextSpan(
                           text: "Visualize\n",
-                          style: TextStyle(
+                          style: GoogleFonts.pompiere(
                             color: Color(0xFF2E2E2E),
                             fontSize: SizeConfig.heightMultiplier * 2,
                             fontWeight: FontWeight.w700,
@@ -145,7 +160,7 @@ class _VisualizerPageState extends State<VisualizerPage> {
                           ),
                           children: [
                             TextSpan(
-                                style: TextStyle(
+                                style: GoogleFonts.pompiere(
                                   color: Color(0xFF2E2E2E),
                                   fontSize: SizeConfig.heightMultiplier * 1.5,
                                 ),
@@ -222,6 +237,7 @@ class _VisualizerPageState extends State<VisualizerPage> {
                             });
                             enableBottomButtons();
                             if (!pathFound) {
+                              // ignore: deprecated_member_use
                               Scaffold.of(context).showSnackBar(snackBar);
                             }
                           });
@@ -243,14 +259,14 @@ class _VisualizerPageState extends State<VisualizerPage> {
                       textAlign: TextAlign.center,
                       text: TextSpan(
                           text: "Generate\n",
-                          style: TextStyle(
+                          style: GoogleFonts.pompiere(
                               fontWeight: FontWeight.w700,
                               color: Colors.black,
                               fontSize: SizeConfig.heightMultiplier * 2,
                               height: 1.0),
                           children: [
                             TextSpan(
-                                style: TextStyle(
+                                style: GoogleFonts.pompiere(
                                     color: Colors.black,
                                     fontSize:
                                         SizeConfig.heightMultiplier * 1.5),
@@ -280,7 +296,6 @@ class _VisualizerPageState extends State<VisualizerPage> {
                       });
                       disableBottomButtons();
                       grid.clearPaths();
-                      //grid.fillWithWall();
                       GenerateAlgorithms.visualize(
                           algorithm: model.selectedAlg,
                           gridd: grid.nodeTypes,
@@ -288,7 +303,6 @@ class _VisualizerPageState extends State<VisualizerPage> {
                             return model.stop;
                           },
                           onShowCurrentNode: (i, j) {
-                            //grid.addNode(i, j, Brush.open);
                             grid.putCurrentNode(i, j);
                           },
                           onRemoveWall: (i, j) {
@@ -359,7 +373,7 @@ class _VisualizerPageState extends State<VisualizerPage> {
             ),
             Positioned(
               top: 50,
-              left: 0,
+              left: 10,
               child: Selector<OperationCountModel, int>(
                   selector: (context, model) => model.operations,
                   shouldRebuild: (a, b) => true,
@@ -367,14 +381,18 @@ class _VisualizerPageState extends State<VisualizerPage> {
                     return popupmodel.brightness == Brightness.light
                         ? Text(
                             'Operations: ${operations.toString()}',
-                            style: TextStyle(
-                              color: Colors.white,
+                            style: GoogleFonts.pompiere(
+                              color: Colors.redAccent,
+                              fontSize: SizeConfig.heightMultiplier * 3,
+                              fontWeight: FontWeight.w600,
                             ),
                           )
                         : Text(
                             'Operations: ${operations.toString()}',
-                            style: TextStyle(
-                              color: Colors.white,
+                            style: GoogleFonts.pompiere(
+                              color: Colors.redAccent,
+                              fontSize: SizeConfig.heightMultiplier * 3,
+                              fontWeight: FontWeight.w600,
                             ),
                           );
                   }),
@@ -395,14 +413,13 @@ class _VisualizerPageState extends State<VisualizerPage> {
                     Center(
                       heightFactor: 0.7,
                       child: FloatingActionButton(
+                        key: UniqueKey(),
                         backgroundColor:
                             !isRunning ? Colors.orange : Colors.orange[100],
                         child: Icon(
                           !isRunning ? Icons.play_arrow : Icons.pause,
                           color: Colors.white,
                         ),
-
-                        // mini: true,
                         onPressed: () {
                           setState(() {
                             isRunning = false;
@@ -425,7 +442,7 @@ class _VisualizerPageState extends State<VisualizerPage> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       SizedBox(
-                        width: SizeConfig.widthMultiplier,
+                        width: SizeConfig.widthMultiplier * 5,
                       ),
                       Consumer<PopUpModel>(
                         builder: (_, model, __) {
@@ -554,7 +571,7 @@ class _VisualizerPageState extends State<VisualizerPage> {
                         },
                       ),
                       SizedBox(
-                        width: SizeConfig.widthMultiplier,
+                        width: SizeConfig.widthMultiplier * 5,
                       ),
                     ],
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:path_finder/config/size_config.dart';
 
 class PopUpItem extends StatelessWidget {
@@ -22,7 +23,7 @@ class PopUpItem extends StatelessWidget {
               child: Text(
                 text,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.elsie(
                   color: Colors.red[700],
                   fontSize: SizeConfig.heightMultiplier * 2,
                   fontWeight: FontWeight.w600,

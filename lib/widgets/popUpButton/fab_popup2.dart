@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:path_finder/config/size_config.dart';
 import 'package:path_finder/widgets/popUpButton/popUpItem.dart';
 import 'package:path_finder/widgets/popUpButton/popup_model.dart';
-
-import 'popup.dart';
 
 enum AnimatedButtonPopUpDirection {
   horizontal,
@@ -65,7 +64,9 @@ class _FabWithPopUp2State extends State<FabWithPopUp2>
             color: widget.color,
           ),
           duration: Duration(milliseconds: 120),
+          // ignore: deprecated_member_use
           child: FlatButton(
+            key: UniqueKey(),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
             padding: EdgeInsets.all(2),
@@ -86,16 +87,10 @@ class _FabWithPopUp2State extends State<FabWithPopUp2>
     );
   }
 
-  TapDownDetails _tapDownDetails;
   OVERLAY_POSITION _overlayPosition = OVERLAY_POSITION.TOP;
-
-  double _statusBarHeight;
-  double _toolBarHeight;
 
   OverlayEntry _createOverlayEntry() {
     var offset = Offset(100, 50);
-    _statusBarHeight = MediaQuery.of(context).padding.top;
-    _toolBarHeight = 50;
 
     return OverlayEntry(builder: (context) {
       return Stack(
@@ -112,7 +107,7 @@ class _FabWithPopUp2State extends State<FabWithPopUp2>
           ),
           Positioned(
             left: 0,
-            top: SizeConfig.heightMultiplier * 27,
+            top: SizeConfig.heightMultiplier * 31,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -150,7 +145,7 @@ class _FabWithPopUp2State extends State<FabWithPopUp2>
               child: Text(
                 'Choose Wall Generation Algorithm',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.deliusSwashCaps(
                     color: Colors.black,
                     fontSize: SizeConfig.heightMultiplier * 3,
                     fontWeight: FontWeight.w800),
@@ -256,14 +251,6 @@ class OpenPainter extends CustomPainter {
       ..moveTo(first.dx, first.dy)
       ..lineTo(second.dx, second.dy)
       ..lineTo(third.dx, third.dy);
-    canvas.drawPath(path1, paint);
-  }
-
-  void _drawTwoShape(Canvas canvas,
-      {Offset first, Offset second, Size size, paint}) {
-    var path1 = Path()
-      ..moveTo(first.dx, first.dy)
-      ..lineTo(second.dx, second.dy);
     canvas.drawPath(path1, paint);
   }
 }

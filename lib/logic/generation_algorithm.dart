@@ -176,6 +176,7 @@ class GenerateAlgorithms {
         next.visited = true;
         visitedCount++;
         current = next;
+        // ignore: prefer_is_not_empty
       } else if (!stack.isEmpty) {
         showWall(current);
         removeWall(current, current);

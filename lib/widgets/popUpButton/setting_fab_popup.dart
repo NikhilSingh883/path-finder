@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:path_finder/config/size_config.dart';
 import 'package:path_finder/pages/introduction_page.dart';
 import 'package:path_finder/widgets/popUpButton/fab_popup2.dart';
 import 'package:path_finder/widgets/popUpButton/popup_model.dart';
 import 'package:provider/provider.dart';
-
-import '../2d_grid.dart';
 
 enum OVERLAY_POSITION { TOP, BOTTOM }
 
@@ -65,7 +64,7 @@ class _SettingFabWithPopUpState extends State<SettingFabWithPopUp>
           ),
           Positioned(
             left: 0,
-            top: SizeConfig.heightMultiplier * 12,
+            top: SizeConfig.heightMultiplier * 32,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -107,7 +106,7 @@ class _SettingFabWithPopUpState extends State<SettingFabWithPopUp>
               child: Text(
                 'Settings',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: GoogleFonts.deliusSwashCaps(
                     // color: Colors.black,
                     fontSize: SizeConfig.heightMultiplier * 3,
                     fontWeight: FontWeight.w800),
@@ -120,22 +119,27 @@ class _SettingFabWithPopUpState extends State<SettingFabWithPopUp>
                   children: [
                     Text(
                       'Speed of Algorithms   :  ',
-                      style: TextStyle(
+                      style: GoogleFonts.flamenco(
                         fontSize: SizeConfig.heightMultiplier * 2,
                       ),
                     ),
-                    Text(() {
-                      switch (model.speed) {
-                        case 400:
-                          return "Slow";
-                          break;
-                        case 1:
-                          return "Fast";
-                          break;
-                        default:
-                          return "Average";
-                      }
-                    }()),
+                    Text(
+                      () {
+                        switch (model.speed) {
+                          case 400:
+                            return "Slow";
+                            break;
+                          case 1:
+                            return "Fast";
+                            break;
+                          default:
+                            return "Average";
+                        }
+                      }(),
+                      style: GoogleFonts.fontdinerSwanky(
+                        fontSize: SizeConfig.heightMultiplier * 1.5,
+                      ),
+                    ),
                   ],
                 ),
                 Container(
@@ -161,7 +165,7 @@ class _SettingFabWithPopUpState extends State<SettingFabWithPopUp>
                 ListTile(
                   title: Text(
                     'Dark Theme',
-                    style: TextStyle(
+                    style: GoogleFonts.flamenco(
                       fontSize: SizeConfig.heightMultiplier * 2,
                       // color: Colors.,
                     ),
@@ -185,15 +189,18 @@ class _SettingFabWithPopUpState extends State<SettingFabWithPopUp>
                 ListTile(
                     title: Text(
                       'Forgot the tools?',
-                      style: TextStyle(
+                      style: GoogleFonts.flamenco(
                         fontSize: SizeConfig.heightMultiplier * 2,
                       ),
                     ),
+                    // ignore: deprecated_member_use
                     trailing: FlatButton(
+                      key: UniqueKey(),
                       child: Text(
                         "Show Introduction",
-                        style: TextStyle(
+                        style: GoogleFonts.fontdinerSwanky(
                           fontSize: SizeConfig.heightMultiplier * 2,
+                          fontWeight: FontWeight.w800,
                         ),
                       ),
                       onPressed: () {
@@ -279,14 +286,6 @@ class OpenPainter extends CustomPainter {
       ..moveTo(first.dx, first.dy)
       ..lineTo(second.dx, second.dy)
       ..lineTo(third.dx, third.dy);
-    canvas.drawPath(path1, paint);
-  }
-
-  void _drawTwoShape(Canvas canvas,
-      {Offset first, Offset second, Size size, paint}) {
-    var path1 = Path()
-      ..moveTo(first.dx, first.dy)
-      ..lineTo(second.dx, second.dy);
     canvas.drawPath(path1, paint);
   }
 }
