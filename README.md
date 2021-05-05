@@ -2,6 +2,7 @@
 
 An app that can help you visualize your favourite path finding algorithms with decent UI and many cutomizations
 
+![App](assets/appPre.jpg)
 ![App](assets/appPre.gif)
 
 ## Algorithms
