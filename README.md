@@ -5,4 +5,5 @@ An app that can help you visualize your favourite path finding algorithms with d
 ## Algorithms
 
 -Dijkstra
+
 ![Dijkstra](assets/dijkstra.gif)
