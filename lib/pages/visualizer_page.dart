@@ -415,9 +415,9 @@ class _VisualizerPageState extends State<VisualizerPage> {
                       child: FloatingActionButton(
                         key: UniqueKey(),
                         backgroundColor:
-                            !isRunning ? Colors.orange : Colors.orange[100],
+                            isRunning ? Colors.orange : Colors.orange[100],
                         child: Icon(
-                          !isRunning ? Icons.play_arrow : Icons.pause,
+                          Icons.pause,
                           color: Colors.white,
                         ),
                         onPressed: () {

@@ -173,7 +173,7 @@ class _FabWithPopUpState extends State<FabWithPopUp>
                   ),
                   PopUpItem(
                     text: 'Bidirectional Dijkstra',
-                    image: 'assets/dijkstra.gif',
+                    image: 'assets/bi.gif',
                     onPressed: () {
                       widget.model.setActivePAlgorithm(3);
                       _overlayEntry.remove();
